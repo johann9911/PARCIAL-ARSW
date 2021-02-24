@@ -4,8 +4,13 @@ import eci.arsw.covidanalyzer.model.Result;
 import eci.arsw.covidanalyzer.model.ResultType;
 import eci.arsw.covidanalyzer.service.ICovidAggregateService;
 
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,10 +25,11 @@ public class CovidAggregateController {
     //TODO: Implemente todos los metodos POST que hacen falta.
 
     @RequestMapping(value = "/covid/result/true-positive", method = RequestMethod.POST)
-    public ResponseEntity addTruePositiveResult(Result result) {
+    public ResponseEntity addTruePositiveResult(@RequestBody Result result) {
+    	
         //TODO
         covidAggregateService.aggregateResult(result, ResultType.TRUE_POSITIVE);
-        return null;
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     //TODO: Implemente todos los metodos GET que hacen falta.
@@ -31,8 +37,7 @@ public class CovidAggregateController {
     @RequestMapping(value = "/covid/result/true-positive", method = RequestMethod.GET)
     public ResponseEntity getTruePositiveResult() {
         //TODO
-        //covidAggregateService.getResult(ResultType.TRUE_POSITIVE);
-        return ResponseEntity.ok("Hello World");
+    	return new ResponseEntity<>(covidAggregateService.getResult(ResultType.TRUE_POSITIVE), HttpStatus.ACCEPTED);
     }
     
     //True-Negative
@@ -40,14 +45,14 @@ public class CovidAggregateController {
     public ResponseEntity addTrueNegativeResult(Result result) {
         //TODO
         covidAggregateService.aggregateResult(result, ResultType.TRUE_NEGATIVE);
-        return null;
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
     
     @RequestMapping(value = "/covid/result/true-negative", method = RequestMethod.GET)
     public ResponseEntity getTrueNegativeResult() {
         //TODO
-        covidAggregateService.getResult(ResultType.TRUE_NEGATIVE);
-        return ResponseEntity.ok("Hello World");
+    	return new ResponseEntity<>(covidAggregateService.getResult(ResultType.TRUE_NEGATIVE), HttpStatus.ACCEPTED);
+
     }
     
     //false-positive
@@ -55,14 +60,13 @@ public class CovidAggregateController {
     public ResponseEntity addFalsePositiveResult(Result result) {
         //TODO
         covidAggregateService.aggregateResult(result, ResultType.FALSE_POSITIVE);
-        return null;
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
     
     @RequestMapping(value = "/covid/result/false-positive", method = RequestMethod.GET)
     public ResponseEntity getFalsePositiveResult() {
         //TODO
-        covidAggregateService.getResult(ResultType.FALSE_POSITIVE);
-        return ResponseEntity.ok("Hello World");
+    	return new ResponseEntity<>(covidAggregateService.getResult(ResultType.FALSE_POSITIVE), HttpStatus.ACCEPTED);
     }
     
   //false-negative
@@ -70,29 +74,22 @@ public class CovidAggregateController {
     public ResponseEntity addFalseNegativeResult(Result result) {
         //TODO
         covidAggregateService.aggregateResult(result, ResultType.FALSE_NEGATIVE);
-        return null;
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
     
     @RequestMapping(value = "/covid/result/false-negative", method = RequestMethod.GET)
     public ResponseEntity getFalseNegativeResult() {
         //TODO
-        covidAggregateService.getResult(ResultType.FALSE_NEGATIVE);
-        return ResponseEntity.ok("Hello World");
+    	return new ResponseEntity<>(covidAggregateService.getResult(ResultType.FALSE_NEGATIVE), HttpStatus.ACCEPTED);
     }
 
-
-    
-    
-    
-    
-    
     //TODO: Implemente el método.
 
     @RequestMapping(value = "/covid/result/persona/{id}", method = RequestMethod.PUT)
-    public ResponseEntity savePersonaWithMultipleTests() {
+    public ResponseEntity savePersonaWithMultipleTests(@PathVariable UUID id,@RequestBody ResultType type) {
         //TODO
-        covidAggregateService.getResult(ResultType.TRUE_POSITIVE);
-        return null;
+        covidAggregateService.upsertPersonWithMultipleTests(id,type);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
     
 }

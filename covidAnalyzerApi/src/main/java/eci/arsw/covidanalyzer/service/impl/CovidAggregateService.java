@@ -17,8 +17,11 @@ public class CovidAggregateService implements ICovidAggregateService {
 	private List<Result> results = new ArrayList<>();
 	
 	public CovidAggregateService() {
-		results.add(new Result("johann","bogota"));
-		results.add(new Result("steven","velez"));
+		Result r1=new Result("johann","bogota");
+		r1.setResulType(ResultType.TRUE_POSITIVE);
+		results.add(r1);
+		
+		
 	}
 	
 	@Override
@@ -26,14 +29,14 @@ public class CovidAggregateService implements ICovidAggregateService {
 		boolean esta=false;
 		for(Result r:results) {
 			if(r.equals(result)) {
-				r.sumResul();;
+				r.sumResul();
 				esta=true;
 			}
 		}
 		if(!esta) {
 			results.add(result);
 		}
-		
+		result.setResulType(type);
 		return true;
 	}
 	
@@ -42,7 +45,7 @@ public class CovidAggregateService implements ICovidAggregateService {
 	public List<Result> getResult(ResultType type) {
 		List<Result> copia = new ArrayList<>();
 		for(Result r:results) {
-			if(r.getResulType().contains(type)) {
+			if(r.getResulType().equals(type)) {
 				copia.add(r);
 			}
 		}
@@ -51,7 +54,14 @@ public class CovidAggregateService implements ICovidAggregateService {
 
 	@Override
 	public void upsertPersonWithMultipleTests(UUID id, ResultType type) {
-		
+		for(Result r:results) {
+			System.out.println("---");
+			if(r.equals2(id)) {
+				
+				r.setResulType(type);
+				r.sumResul();
+			}
+		}
 		
 	}
 

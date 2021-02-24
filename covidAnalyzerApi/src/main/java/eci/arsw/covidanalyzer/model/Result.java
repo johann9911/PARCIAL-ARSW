@@ -10,29 +10,23 @@ public class Result {
     private UUID id=null;
     private String firstName;
     private String lastName;
-    private List<ResultType> type;
+    private ResultType type;
     private int numResult;
     //</editor-fold>
     
-    public Result(UUID id,String firstName, String lastName) {
-    	this.firstName=firstName;
-    	this.id=id;
-    	this.lastName=lastName;
-    	this.type=new ArrayList<>();
-    	this.numResult=0;
-    }
     public Result(String firstName, String lastName) {
     	this.firstName=firstName;
     	this.lastName=lastName;
-    	this.type=new ArrayList<>();
-    	this.numResult=0;
+    	this.type=null;
+    	this.numResult=1;
+    	this.id=UUID.randomUUID();
     }
 
     public void setResulType (ResultType resulType) {
-    	type.add(resulType);
+    	this.type=resulType;
     }
     
-    public List<ResultType> getResulType () {
+    public ResultType getResulType () {
     	return type;
     }
     
@@ -83,6 +77,9 @@ public class Result {
     @Override
     public boolean equals(Object o) {
         return ((Result) o).getId().equals(this.id);
+    }
+    public boolean equals2(UUID id) {
+    	return this.id.equals(id);
     }
     //</editor-fold>
 

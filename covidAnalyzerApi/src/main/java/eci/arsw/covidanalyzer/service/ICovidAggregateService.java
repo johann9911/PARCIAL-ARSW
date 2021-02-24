@@ -23,7 +23,7 @@ public interface ICovidAggregateService {
      * @param type
      * @return
      */
-    List<Result> getResult(ResultType type);
+    List<Result> getResult(ResultType type) ;
 
     /**
      * 
