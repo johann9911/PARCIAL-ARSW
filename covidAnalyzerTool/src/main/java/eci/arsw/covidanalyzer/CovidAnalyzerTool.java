@@ -22,24 +22,40 @@ public class CovidAnalyzerTool {
     private TestReader testReader;
     private int amountOfFilesTotal;
     private AtomicInteger amountOfFilesProcessed;
+    private final int numHilos=5;
+	private ArrayList hilos;
 
     public CovidAnalyzerTool() {
         resultAnalyzer = new ResultAnalyzer();
         testReader = new TestReader();
         amountOfFilesProcessed = new AtomicInteger();
+        hilos = new ArrayList<>();
     }
 
     public void processResultData() {
         amountOfFilesProcessed.set(0);
         List<File> resultFiles = getResultFileList();
         amountOfFilesTotal = resultFiles.size();
-        for (File resultFile : resultFiles) {
-            List<Result> results = testReader.readResultsFromFile(resultFile);
-            for (Result result : results) {
-                resultAnalyzer.addResult(result);
-            }
-            amountOfFilesProcessed.incrementAndGet();
+        int i;
+        int limiteinf = 0, limitesup=0;
+        System.out.println(amountOfFilesTotal);
+        for(i=0;i<numHilos;i++) {
+            
+        	limiteinf= i*(amountOfFilesTotal/numHilos);
+        	limitesup = ((i+1)*(amountOfFilesTotal/numHilos))-1;
+        	if(i==numHilos-1 && limitesup<amountOfFilesTotal-1) {
+        		limitesup = limitesup+((amountOfFilesTotal-1)-limitesup);
+        	}
+        	CovidThread t = new CovidThread(limiteinf, limitesup,resultFiles, resultAnalyzer, testReader, amountOfFilesProcessed);
+        	hilos.add(t);
+        	t.start();
+        	
         }
+        
+   
+        
+
+   
     }
 
     private List<File> getResultFileList() {
