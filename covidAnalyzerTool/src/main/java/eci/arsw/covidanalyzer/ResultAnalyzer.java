@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class ResultAnalyzer {
 
@@ -12,13 +13,17 @@ public class ResultAnalyzer {
     private Set<Result> positivePeople;
 
     public ResultAnalyzer() {
-        positivePeople = new HashSet<>();
+        positivePeople = ConcurrentHashMap.newKeySet();
+      
     }
 
     public synchronized void addResult(Result result) {
+    	
         if (result.isResult()) {
             if (result.getTestSpecifity() > MIN_TEST_SPECIFY) {
+            	
                 this.positivePeople.add(result);
+            	
                 TestReporter.report(result, TestReporter.TRUE_POSITIVE);
             } else {
                 TestReporter.report(result, TestReporter.FALSE_POSITIVE);
@@ -30,10 +35,14 @@ public class ResultAnalyzer {
                 TestReporter.report(result, TestReporter.FALSE_NEGATIVE);
             }
         }
+        
+    	
     }
 
     public Set<Result> listOfPositivePeople() {
+    	
         return positivePeople;
+    	
     }
 
 }

@@ -11,6 +11,7 @@ public class CovidThread extends Thread {
 	private TestReader testReader;
 	private AtomicInteger amountOfFilesProcessed;
 	private ResultAnalyzer resultAnalyzer;
+	private boolean pausado;
 
 	public CovidThread(int limiteinf, int limitesup, List<File> resultFiles, ResultAnalyzer resultAnalyzer,
 			TestReader testReader, AtomicInteger amountOfFilesProcessed) {
@@ -20,7 +21,7 @@ public class CovidThread extends Thread {
 		this.resultAnalyzer=resultAnalyzer;
 		this.testReader=testReader;
 		this.amountOfFilesProcessed=amountOfFilesProcessed;
-		boolean pausado = false;
+		pausado = false;
 
 	}
 
@@ -30,10 +31,33 @@ public class CovidThread extends Thread {
 		{       
 			List<Result> results = testReader.readResultsFromFile(resultFiles.get(j));
             for (Result result : results) {
+            	synchronized (this) {
+					while(pausado) {
+						try {
+							this.wait();
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						
+					}
+					
+				}
                 resultAnalyzer.addResult(result);
             }
             amountOfFilesProcessed.incrementAndGet();
 		}
 	}
+	
+	public synchronized void pausar() {
+		if(pausado) {
+			pausado=false;
+		}else {
+			pausado=true;
+		}
+		
+		notifyAll();
+	}
+
 
 }
